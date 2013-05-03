@@ -1,11 +1,17 @@
 David's Twitter Aggregator plugin (wp-tweet-aggregator)
 ===================
 
-Wordpress Plugin, allows you to specify twitter accounts from which to aggregate and output tweets. It does some resource saving caching too (5 minute cache). I wanted to call it Alligator, but there's already a commercial plugin with that name. 
+Wordpress Plugin, allows you to specify twitter accounts from which to aggregate and output tweets. It does some request saving caching too (default set to a 5 minute cache). I wanted to call it Alligator, but there's already a commercial plugin with that name. 
 
 ## Caveat
 
 This is a first complete, working version. Extracted from a new client website and used as a learning experience for building plugins correctly. Provided under GPL2 which is 'as is' and 'without warranty.'
+
+## What this is not
+
+* A live streaming twitter client, although the bare bones and front end parts of that are already in place, and it could easily be converted to do so. 
+* *Just* a drop in generic twitter profile widget - [use this twitter page to generate that](https://twitter.com/settings/widgets "Twitter widget generator")
+* An social e-commerce platform for monetizing leveraged synergies.
 
 ## Installation
 
@@ -41,6 +47,7 @@ The plugin includes the [**twitteroauth**](https://github.com/abraham/twitteroau
 
 ## Future plans
 
+* Allow cache time to be adjusted
 * Rewrite simple jQuery functions to JS (remove jQuery requirement)
 * Alter CSS to provide basic structure and/or input form for custom styling
 * See if there's any way to avoid having to start with token + keys.
