@@ -100,7 +100,7 @@ if ( ! class_exists( 'DL_TA' ) ) {
 		}
 		function wp_enqueue_page_scripts() {
 			// IDK, include this on pages where the shortcode is found?
-			wp_enqueue_script( 'DL_TA', plugins_url('ajax.js', __FILE__), array('jquery') );
+			// wp_enqueue_script( 'DL_TA', plugins_url('ajax.js', __FILE__), array('jquery') );
 			
 		}
 		
