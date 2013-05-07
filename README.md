@@ -10,6 +10,8 @@ This is a first complete, working version. Extracted from a new client website a
 ## What this is not
 
 * A live streaming twitter client, although the bare bones and front end parts of that are already in place, and it could easily be converted to do so. 
+* An RSS aggregator - twitter have deprecated RSS and it is no longer available
+* A non-authenticating plugin - Twitter API 1.1 requires login and so you are required to provide API keys for this code to work (more below)
 * *Just* a drop in generic twitter profile widget - [use this twitter page to generate that](https://twitter.com/settings/widgets "Twitter widget generator")
 * An social e-commerce platform for monetizing leveraged synergies.
 
