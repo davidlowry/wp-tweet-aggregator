@@ -78,7 +78,7 @@ if ( ! class_exists( 'DL_TA' ) ) {
 	            <?php echo $before_title
 	                . 'I&rsquo;m testing something'
 	                . $after_title; ?>
-				<button class="DL_TA"><? _e('Click me!', 'DL_TA'); ?></button>
+				<!--<button class="DL_TA"><? _e('Click me!', 'DL_TA'); ?></button>-->
 				<div class="twitter-timeline"></div>
 	        <?php echo $after_widget; ?>
 		<?php
