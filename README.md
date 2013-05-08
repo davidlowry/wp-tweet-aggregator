@@ -31,7 +31,13 @@ Once uploaded and activated (through the Wordpress admin > plugins page), click 
 
 ## Usage
 
+# Widget
+
 A widget 'Twitter Aggregator (Basic)' has been added to your Widgets configuration screen, drag it onto the sidebar of your choice. It should now appear on any page or post which has that sidebar. Note you'll need to clear any active cache for the widget to show on screen.
+
+# Shortcode
+
+You can embed the shortcode [twitter_stream *classname*] into any of your pages (see the file DL_TA.stream.css for styles to overwrite) the *classname* parameter is any class name of your choice to assist with styling. Note similar classnames between widget and shortcode stream so be careful :) You can [easily embed shortcodes in your theme](http://www.wpbeginner.com/wp-themes/how-to-use-shortcodes-in-your-wordpress-themes/) if you need to.
 
 ## Scripting
 
