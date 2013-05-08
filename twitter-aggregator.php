@@ -69,6 +69,9 @@ if ( ! class_exists( 'DL_TA' ) ) {
 				add_action( 'wp_ajax_' . $this->action, array( $this, 'do_ajax' ) ); // For logged in users
 				add_action( 'wp_ajax_nopriv_' . $this->action, array( $this, 'do_ajax' ) ); // For logged out users
 			}
+			
+			// Shortcode(s)
+			add_shortcode( 'twitter_stream', array($this,'twitter_stream_func') );
 		}
 		
 		function widget_DL_TA_basic($args) {
@@ -96,17 +99,25 @@ if ( ! class_exists( 'DL_TA' ) ) {
 			
 			wp_register_style( 'dlta-widget-style', plugins_url('includes/DL_TA.sidebar.css', __FILE__) );
 			wp_enqueue_style( 'dlta-widget-style' );
-			
-		}
-		function wp_enqueue_page_scripts() {
-			// IDK, include this on pages where the shortcode is found?
-			// wp_enqueue_script( 'DL_TA', plugins_url('ajax.js', __FILE__), array('jquery') );
-			
 		}
 		
-		function do_ajax(){
-
-            // By default, let's start with an error message
+		function wp_enqueue_page_scripts() {
+			wp_enqueue_script( 'dlta', plugins_url('includes/ajax.js', __FILE__), array('jquery') );
+			
+            // Pass a collection of variables to our JavaScript
+			wp_localize_script( 'dlta', 'dlTA', array(
+				'ajaxurl' => admin_url('admin-ajax.php'),
+				'action' => $this->action,
+				'nonce' => wp_create_nonce( $this->action ),
+			) );
+			
+			wp_register_style( 'dlta-stream-style', plugins_url('includes/DL_TA.stream.css', __FILE__) );
+			wp_enqueue_style( 'dlta-stream-style' );
+		}
+		
+		function get_data(){
+			
+			// By default, let's start with an error message
 			$response = array(
 				'status' => 'error',
 				'message' => 'Invalid verification data',
@@ -181,7 +192,14 @@ if ( ! class_exists( 'DL_TA' ) ) {
 				// $response['message'] .= $age;
 			}
 			
-            // Return our response to the script in JSON format
+			return $response;
+		}
+		
+		function do_ajax(){
+			
+			$response = $this->get_data();
+			
+			// Return our response to the script in JSON format
 			header( 'Content: application/json' );
 			echo json_encode( $response );
 			die;
@@ -191,10 +209,30 @@ if ( ! class_exists( 'DL_TA' ) ) {
 			if(!$this->fs) $this->fs = new Fs('DL_TA');
 			$this->fs->trash_static_file(C_DL_TA_CACHE_FILE_NAME);
 		}
+		
+		/****************************************
+		*** SHORT TAG HANDLER
+		****************************************/
+		
+		// Size parameter irrelevant at the moment, but it does insert a css class name
+		// uses same ajax method as widget
+		// [twitter_stream size="big"]
+		function twitter_stream_func( $atts ) {
+			extract( shortcode_atts( array(
+				'size' => 'big'
+			), $atts ) );
+			
+			
+			return "<div class=\"twitter-timeline {$size}\">Loading...</div>";
+		}
 	}
 	
 	
 	$dlta_object = new DL_TA();
 }
+
+		
+		
+
 
 ?>

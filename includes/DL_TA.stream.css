@@ -1,0 +1,51 @@
+.twitter-timeline .timeline-footer { display: none !important; }
+
+.aggregated-tweet-feed { 
+  max-height: 430px; 
+  overflow-y: scroll; 
+  margin-top: 0;
+}
+.aggregated-tweet-feed li {
+  margin-bottom: 1em;
+  border: 1px solid #999;
+  background: white;
+  background: rgba(255,255,255,0.6);
+  color: #666;
+  padding: 0.4em;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-rendering: optimizelegibility;
+  font-size: 0.9em;
+}
+
+.aggregated-tweet-feed li div.user a, 
+.aggregated-tweet-feed li div.user a * {
+  text-decoration: none;
+}
+
+.aggregated-tweet-feed li div.user img {
+  float: left;
+  padding-right: 4px;
+}
+
+.aggregated-tweet-feed li div.user h4 {
+  color: black;
+  font-size: 0.9em;
+  line-height: 1.3em;
+  margin: 0;
+}
+
+.aggregated-tweet-feed li div.user em,
+.aggregated-tweet-feed li div.user span {
+  font-weight: normal;
+  color: #999;
+  display: block;
+}
+
+.aggregated-tweet-feed li div.tweet p {
+  margin: 0.4em 0;
+  font-size: 0.8em;
+}
+
+.aggregated-tweet-feed li div.tweet p a.guid {
+  margin-left: 4px;
+}

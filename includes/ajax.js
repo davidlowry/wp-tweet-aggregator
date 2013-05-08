@@ -5,7 +5,8 @@ DLTA_widget = function() {
 jQuery.extend(DLTA_widget.prototype, {
 
     // object variables
-    widget: '.widget.DL_TA_widget_DL_TA_basic .twitter-timeline',
+    //.widget.DL_TA_widget_DL_TA_basic 
+    widget: '.twitter-timeline', // does widget AND wide feed
 
     init: function() {
     // do initialization here
