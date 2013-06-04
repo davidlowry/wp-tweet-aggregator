@@ -14,9 +14,8 @@ define('CONSUMER_SECRET', get_option('twitter_keys_access_token'));
 add_action('admin_menu', 'dl_ta_settings_init');
 
 function dl_ta_settings_init() {
-
 	// Add the section to reading settings so we can add our fields to it
-	add_menu_page( 'DL Twitter Aggregator', 'David\'s Twitter Aggregator', 'administrator', 'dlta_settings', 'dlta_settings_page', plugins_url('dl-twitter-aggregator') . '/includes/dlta_icon.png' );
+	add_menu_page( 'DL Twitter Aggregator', 'David\'s Twitter Aggregator', 'administrator', 'dlta_settings', 'dlta_settings_page', plugin_dir_url( __FILE__ ) . 'dlta_icon.png' );
 	add_action('admin_init', 'register_dlta_settings');
 }
 
@@ -66,6 +65,9 @@ function register_dlta_settings() {
 		update_option('twitter_keys_screen_name','');
 		update_option('twitter_username_add','');
 		update_option('twitter_usernames','');
+		
+		unset($_SESSION['oauth_token']);
+		unset($_SESSION['oauth_token_secret']);
 		
 		reset_cache();
 		
@@ -119,6 +121,7 @@ function register_dlta_settings() {
 	if($secrets_are_set) {
 		$token = $_SESSION['oauth_token']; //get_option('twitter_keys_oauth_token_secret'); //
 		$secret = $_SESSION['oauth_token_secret']; //get_option('twitter_keys_oauth_token_secret'); //
+		
 		$secrets_are_set = !empty($token) && !empty($secret);
 	}
 	
@@ -138,7 +141,6 @@ function register_dlta_settings() {
 		// request username input, display a username list and input please
 		add_settings_section('dlta_settings_section_tweeters', 'Twitter Users', 'dlta_settings_section_tweeters_text', 'dlta_settings_users');
 		add_settings_field('twitter_username_add', 'Twitter Usernames', 'twitter_username_add_input', 'dlta_settings_users', 'dlta_settings_section_tweeters');
-
 
 	} else {
 
@@ -175,16 +177,27 @@ function register_dlta_settings() {
 				$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
 				$connection->host = "https://api.twitter.com/1.1/";
 				
-				/* Get temporary credentials. */
-				$temporary_credentials = $connection->getRequestToken(OAUTH_CALLBACK); //plugins_url('oauth_return.php', __FILE__)); //plugins_url('oauth_return.php', __FILE__)); //
-				$redirect_url = $connection->getAuthorizeURL($temporary_credentials, FALSE);
-				$_SESSION['oauth_token'] = $temporary_credentials['oauth_token'];
-				$_SESSION['oauth_token_secret'] = $temporary_credentials['oauth_token_secret'];
+				// Get temporary credentials.
+				$temporary_credentials = $connection->getRequestToken(OAUTH_CALLBACK);
+				if($connection->http_code == 200){
+					// happy, carry on
+					$redirect_url = $connection->getAuthorizeURL($temporary_credentials, FALSE);
+					$_SESSION['oauth_token'] = $temporary_credentials['oauth_token'];
+					$_SESSION['oauth_token_secret'] = $temporary_credentials['oauth_token_secret'];
+					header('Location: '.$redirect_url);
+				} else {
+					$error_text = '
+						<h2>Problem with credentials</h2>
+						<p>Either Twitter\'s API is having difficulties, or it\'s possible that your credentials are out of date and don\'t permit us to connect.</p>
+						<p>Solve this by <a href='.admin_url('admin.php?page=dlta_settings&reset=1').'>clicking here to reset</a> this plugin, and then use the link provided to create a new app.</p>
+					';
+					die($error_text);
+				}
 				
-				header('Location: '.$redirect_url);
 			}
+
 		} else {
-			
+
 			// Nothing's set, ask for tweet stuff
 			add_settings_section('dlta_settings_section_keys', 'Twitter API Keys', 'dlta_settings_section_keys_text', 'dlta_settings');
 			
@@ -282,11 +295,15 @@ function dlta_settings_page() {
 <div class="wrap">
 	<h2>David&rsquo;s Twitter Aggregator Settings Page</h2>
 	<?php
+		if(isset($error_text)){
+			echo $error_text;
+		}
 		if(!$secrets_are_stored){
 	?>
 	<form method="post" action="options.php">
 		<?php settings_fields( 'dlta_settings_group' );?>
 		<?php do_settings_sections ('dlta_settings'); ?>
+		<p>Experiencing a problem? <a href="<?php echo admin_url('admin.php?page=dlta_settings&reset=1') ?>">Try resetting the plugin settings</a></p>
 		<?php submit_button('Save + authenticate with twitter'); ?>
 	</form>
 	<?php
